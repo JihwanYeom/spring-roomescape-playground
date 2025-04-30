@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.Reservation;
 
 @Controller
-public class RoomescapeController {
+public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<Reservation>();
 
