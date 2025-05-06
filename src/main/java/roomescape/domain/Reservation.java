@@ -14,6 +14,13 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation(Long id, Reservation reservation) {
+        this.id = id;
+        this.name = reservation.name;
+        this.date = reservation.date;
+        this.time = reservation.time;
+    }
+
     public Long getId() {
         return id;
     }
