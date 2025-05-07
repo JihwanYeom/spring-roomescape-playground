@@ -18,7 +18,7 @@ import roomescape.domain.Validator;
 @Controller
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<Reservation>();
+    private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(0);
     Validator validator = new Validator();
 
