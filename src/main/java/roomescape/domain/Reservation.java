@@ -15,7 +15,12 @@ public class Reservation {
     }
 
     public static Reservation of(Long id, Reservation reservation) {
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     public Long getId() {
