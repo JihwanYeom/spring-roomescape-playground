@@ -11,7 +11,6 @@ public class Reservation {
 
     }
 
-
     public Reservation(Long id, String name, String date, String time) {
         this.id = id;
         this.name = name;
