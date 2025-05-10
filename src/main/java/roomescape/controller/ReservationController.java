@@ -1,9 +1,8 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,14 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.Reservation;
-import roomescape.domain.Validator;
+import roomescape.domain.Reservations;
 
 @Controller
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
-    Validator validator = new Validator();
+    @Autowired
+    private Reservations reservations;
 
     @GetMapping("/reservation")
     public String reservation() {
@@ -30,21 +28,19 @@ public class ReservationController {
     @GetMapping("/reservations")
     @ResponseBody
     public ResponseEntity<List<Reservation>> readReservations() {
-        return ResponseEntity.ok().body(reservations);
+        return ResponseEntity.ok().body(reservations.getReservations());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        Reservation newReservation = new Reservation(index.incrementAndGet(), reservation);
-        validator.validateEmptyData(reservation);
-        reservations.add(newReservation);
+        Reservation newReservation = new Reservation(reservations.getNewId(), reservation);
+        reservations.addReservation(newReservation);
         return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId())).body(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        validator.validateReservationIdExists(reservations, id);
-        reservations.removeIf(reservation -> reservation.getId().equals(id));
+        reservations.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 }
