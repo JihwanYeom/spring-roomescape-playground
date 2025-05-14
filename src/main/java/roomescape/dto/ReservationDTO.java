@@ -1,28 +1,19 @@
-package roomescape.domain;
+package roomescape.dto;
 
-public class Reservation {
+import roomescape.domain.Reservation;
+
+public class ReservationDTO {
 
     private Long id;
     private String name;
     private String date;
     private String time;
 
-    public Reservation() {
-
-    }
-
-    public Reservation(Long id, String name, String date, String time) {
+    public ReservationDTO(Long id, String name, String date, String time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public Reservation(Long id, Reservation reservation) {
-        this.id = id;
-        this.name = reservation.name;
-        this.date = reservation.date;
-        this.time = reservation.time;
     }
 
     public Long getId() {
@@ -41,8 +32,12 @@ public class Reservation {
         return time;
     }
 
-    public void setId(long generatedId) {
-        this.id = generatedId;
+    public static ReservationDTO from(Reservation reservation) {
+        return new ReservationDTO(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 }
-
