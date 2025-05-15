@@ -1,12 +1,15 @@
-package roomescape.domain;
+package roomescape.util;
 
 import java.util.List;
+import org.springframework.stereotype.Component;
+import roomescape.domain.Reservation;
 import roomescape.exception.EmptyDataException;
 import roomescape.exception.NotFoundReservationException;
 
-public class Validator {
+@Component
+public class ReservationValidator {
 
-    public void validateEmptyData(Reservation reservation) {
+    public static void validateEmptyData(Reservation reservation) {
         if(reservation.getDate() == null || reservation.getDate().isEmpty())
             throw new EmptyDataException("날짜 정보가 입력되지 않았습니다");
         if(reservation.getTime() == null || reservation.getTime().isEmpty())
@@ -15,7 +18,7 @@ public class Validator {
             throw new EmptyDataException("이름이 입력되지 않았습니다");
     }
 
-    public void validateReservationIdExists(List<Reservation> reservations, Long id) {
+    public static void validateReservationIdExists(List<Reservation> reservations, Long id) {
         boolean exists = reservations.stream()
                 .anyMatch(reservation -> reservation.getId().equals(id));
 

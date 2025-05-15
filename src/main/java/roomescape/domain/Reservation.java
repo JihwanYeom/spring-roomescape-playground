@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import roomescape.util.ReservationValidator;
+
 public class Reservation {
 
     private Long id;
@@ -11,14 +13,9 @@ public class Reservation {
 
     }
 
-    public Reservation(Long id, String name, String date, String time) {
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
 
     public Reservation(Long id, Reservation reservation) {
+        ReservationValidator.validateEmptyData(reservation);
         this.id = id;
         this.name = reservation.name;
         this.date = reservation.date;
