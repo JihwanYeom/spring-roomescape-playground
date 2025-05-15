@@ -33,5 +33,20 @@ public class Reservation {
         return time;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        if(id == null){
+            return 0;
+        }
+        return id.hashCode();
+    }
 }
 
