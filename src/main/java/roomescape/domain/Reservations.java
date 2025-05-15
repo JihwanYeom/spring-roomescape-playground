@@ -20,7 +20,7 @@ public class Reservations {
     }
 
     public void deleteReservation(Long id) {
-        ReservationValidator.validateReservationIdExists(reservations,id);
+        ReservationValidator.validateReservationIdExists(reservations, id);
         reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 
