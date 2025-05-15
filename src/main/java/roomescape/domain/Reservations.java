@@ -16,7 +16,6 @@ public class Reservations {
     }
 
     public void addReservation(Reservation reservation) {
-
         reservations.add(reservation);
     }
 

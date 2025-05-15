@@ -13,13 +13,12 @@ public class Reservation {
 
     }
 
-
-    public Reservation(Long id, Reservation reservation) {
-        ReservationValidator.validateEmptyData(reservation);
+    public Reservation(Long id, String name, String date, String time) {
         this.id = id;
-        this.name = reservation.name;
-        this.date = reservation.date;
-        this.time = reservation.time;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+        ReservationValidator.validateEmptyData(this);
     }
 
     public Long getId() {
