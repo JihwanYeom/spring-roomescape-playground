@@ -44,5 +44,6 @@ public class Reservation {
     public void setId(long generatedId) {
         this.id = generatedId;
     }
+
 }
 

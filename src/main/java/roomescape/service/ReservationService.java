@@ -79,4 +79,5 @@ public class ReservationService {
             throw new NotFoundReservationException("ID " + id + "에 해당하는 예약이 존재하지 않습니다.");
         }
     }
+
 }

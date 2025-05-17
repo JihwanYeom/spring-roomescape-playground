@@ -1,5 +1,8 @@
 package roomescape.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -7,7 +10,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-import java.sql.*;
 
 @Repository
 public class ReservationDAO {
@@ -55,7 +57,5 @@ public class ReservationDAO {
         int update = jdbcTemplate.update(sql, id);
         System.out.println("update = " + update);
     }
-
-
 
 }
