@@ -1,12 +1,12 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
@@ -15,29 +15,19 @@ import roomescape.domain.Reservation;
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Reservation create(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        int update = jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
-            ps.setString(3, reservation.getTime());
-
-            return ps;
-        }, keyHolder);
-
-        Number key = keyHolder.getKey();
-        if (key != null) {
-            return Reservation.of(key.longValue(),reservation);
-        }
-        throw new IllegalStateException("reservation id is not generated");
+        BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(reservation);
+        Number key = simpleJdbcInsert.executeAndReturnKey(paramSource);
+        return Reservation.of(key.longValue(), reservation);
     }
 
     public List<Reservation> findAll() {
