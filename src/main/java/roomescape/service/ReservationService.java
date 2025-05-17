@@ -38,8 +38,8 @@ public class ReservationService {
                 reservationDTO.getDate(),
                 reservationDTO.getTime()
         );
-        reservationDAO.create(reservation);
-        return ReservationResponseDTO.from(reservation);
+        Reservation createdReservation = reservationDAO.create(reservation);
+        return ReservationResponseDTO.from(createdReservation);
     }
 
     public void deleteById(Long id) {
