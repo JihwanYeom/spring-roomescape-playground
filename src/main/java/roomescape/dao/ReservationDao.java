@@ -59,4 +59,9 @@ public class ReservationDao {
         System.out.println("update = " + update);
     }
 
+    public boolean idIsExist(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
+
 }

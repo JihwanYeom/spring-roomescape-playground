@@ -61,11 +61,7 @@ public class ReservationService {
     }
 
     private void validateReservationIdExists(Long id) {
-        List<ReservationResponseDto> reservations = findAll();
-        boolean exists = reservations.stream()
-                .anyMatch(reservation -> reservation.getId().equals(id));
-
-        if (!exists) {
+        if (!reservationDao.idIsExist(id)) {
             throw new NotFoundReservationException("ID " + id + "에 해당하는 예약이 존재하지 않습니다.");
         }
     }
