@@ -20,7 +20,7 @@ public class ReservationDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void create(Reservation reservation) {
+    public Reservation create(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -35,8 +35,9 @@ public class ReservationDAO {
 
         Number key = keyHolder.getKey();
         if (key != null) {
-            reservation.setId(key.longValue());
+            return Reservation.of(key.longValue(),reservation);
         }
+        throw new IllegalStateException("reservation id is not generated");
     }
 
     public List<Reservation> findAll() {

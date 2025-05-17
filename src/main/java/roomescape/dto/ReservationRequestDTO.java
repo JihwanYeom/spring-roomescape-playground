@@ -26,12 +26,4 @@ public class ReservationRequestDTO {
         return time;
     }
 
-    public static ReservationRequestDTO from(Reservation reservation) {
-        return new ReservationRequestDTO(
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        );
-    }
-
 }

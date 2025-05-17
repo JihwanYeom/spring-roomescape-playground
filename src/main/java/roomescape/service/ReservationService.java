@@ -25,11 +25,7 @@ public class ReservationService {
         List<Reservation> reservations = reservationDAO.findAll();
         List<ReservationResponseDTO> result = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            result.add(new ReservationResponseDTO(
-                    reservation.getId(),
-                    reservation.getName(),
-                    reservation.getDate(),
-                    reservation.getTime()));
+            result.add(ReservationResponseDTO.from(reservation));
         }
         return result;
     }
@@ -43,13 +39,7 @@ public class ReservationService {
                 reservationDTO.getTime()
         );
         reservationDAO.create(reservation);
-        ReservationResponseDTO dto = new ReservationResponseDTO(
-                reservation.getId(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        );
-        return dto;
+        return ReservationResponseDTO.from(reservation);
     }
 
     public void deleteById(Long id) {
