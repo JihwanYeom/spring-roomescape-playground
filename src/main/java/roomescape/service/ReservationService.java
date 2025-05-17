@@ -2,10 +2,10 @@ package roomescape.service;
 
 import java.util.ArrayList;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationDAO;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequestDTO;
-import roomescape.dto.ReservationResponseDTO;
+import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,22 +15,22 @@ import roomescape.exception.NotFoundReservationException;
 @Service
 public class ReservationService {
 
-    private final ReservationDAO reservationDAO;
+    private final ReservationDao reservationDao;
 
-    public ReservationService(ReservationDAO reservationDAO) {
-        this.reservationDAO = reservationDAO;
+    public ReservationService(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
-    public List<ReservationResponseDTO> findAll() {
-        List<Reservation> reservations = reservationDAO.findAll();
-        List<ReservationResponseDTO> result = new ArrayList<>();
+    public List<ReservationResponseDto> findAll() {
+        List<Reservation> reservations = reservationDao.findAll();
+        List<ReservationResponseDto> result = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            result.add(ReservationResponseDTO.from(reservation));
+            result.add(ReservationResponseDto.from(reservation));
         }
         return result;
     }
 
-    public ReservationResponseDTO create(ReservationRequestDTO reservationDTO) {
+    public ReservationResponseDto create(ReservationRequestDto reservationDTO) {
         validateEmptyData(reservationDTO);
         Reservation reservation = new Reservation(
                 null,
@@ -38,20 +38,20 @@ public class ReservationService {
                 reservationDTO.getDate(),
                 reservationDTO.getTime()
         );
-        Reservation createdReservation = reservationDAO.create(reservation);
-        return ReservationResponseDTO.from(createdReservation);
+        Reservation createdReservation = reservationDao.create(reservation);
+        return ReservationResponseDto.from(createdReservation);
     }
 
     public void deleteById(Long id) {
         validateReservationIdExists(id);
         try {
-            reservationDAO.deleteById(id);
+            reservationDao.deleteById(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void validateEmptyData(ReservationRequestDTO reservation) {
+    public void validateEmptyData(ReservationRequestDto reservation) {
         if(reservation.getDate() == null || reservation.getDate().isEmpty())
             throw new EmptyDataException("날짜 정보가 입력되지 않았습니다");
         if(reservation.getTime() == null || reservation.getTime().isEmpty())
@@ -61,7 +61,7 @@ public class ReservationService {
     }
 
     public void validateReservationIdExists(Long id) {
-        List<ReservationResponseDTO> reservations = findAll();
+        List<ReservationResponseDto> reservations = findAll();
         boolean exists = reservations.stream()
                 .anyMatch(reservation -> reservation.getId().equals(id));
 
