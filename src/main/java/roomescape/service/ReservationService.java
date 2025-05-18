@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -21,16 +21,16 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public List<ReservationResponseDto> findAll() {
+    public List<ReservationResponse> findAll() {
         List<Reservation> reservations = reservationDao.findAll();
-        List<ReservationResponseDto> result = new ArrayList<>();
+        List<ReservationResponse> result = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            result.add(ReservationResponseDto.from(reservation));
+            result.add(ReservationResponse.from(reservation));
         }
         return result;
     }
 
-    public ReservationResponseDto create(ReservationRequestDto reservationDTO) {
+    public ReservationResponse create(ReservationRequest reservationDTO) {
         validateEmptyData(reservationDTO);
         Reservation reservation = new Reservation(
                 null,
@@ -39,7 +39,7 @@ public class ReservationService {
                 reservationDTO.getTime()
         );
         Reservation createdReservation = reservationDao.create(reservation);
-        return ReservationResponseDto.from(createdReservation);
+        return ReservationResponse.from(createdReservation);
     }
 
     public void deleteById(Long id) {
@@ -51,7 +51,7 @@ public class ReservationService {
         }
     }
 
-    private void validateEmptyData(ReservationRequestDto reservation) {
+    private void validateEmptyData(ReservationRequest reservation) {
         if(reservation.getDate() == null || reservation.getDate().isEmpty())
             throw new EmptyDataException("날짜 정보가 입력되지 않았습니다");
         if(reservation.getTime() == null || reservation.getTime().isEmpty())
