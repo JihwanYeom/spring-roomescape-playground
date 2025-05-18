@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.exception.EmptyDataException;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -31,10 +32,20 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationDTO) {
-        ReservationResponse newReservation = reservationService.create(reservationDTO);
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
+        validateEmptyData(reservationRequest);
+        ReservationResponse newReservation = reservationService.create(reservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
                 .body(newReservation);
+    }
+
+    private void validateEmptyData(ReservationRequest reservation) {
+        if(reservation.getDate() == null || reservation.getDate().isEmpty())
+            throw new EmptyDataException("날짜 정보가 입력되지 않았습니다");
+        if(reservation.getTime() == null || reservation.getTime().isEmpty())
+            throw new EmptyDataException("시간 정보가 입력되지 않았습니다");
+        if(reservation.getName() == null || reservation.getName().isEmpty())
+            throw new EmptyDataException("이름이 입력되지 않았습니다");
     }
 
     @DeleteMapping("/reservations/{id}")

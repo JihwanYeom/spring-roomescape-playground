@@ -22,12 +22,6 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation create(Reservation reservation) {
-        BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(reservation);
-        Number key = simpleJdbcInsert.executeAndReturnKey(paramSource);
-        return Reservation.of(key.longValue(), reservation);
-    }
-
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation";
 
@@ -41,6 +35,12 @@ public class ReservationDao {
         return reservations;
     }
 
+    public Reservation create(Reservation reservation) {
+        BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(reservation);
+        Number key = simpleJdbcInsert.executeAndReturnKey(paramSource);
+        return Reservation.of(key.longValue(), reservation);
+    }
+
     public void deleteById(Long id) throws SQLException {
         String sql = "DELETE FROM reservation WHERE id=?";
         int update = jdbcTemplate.update(sql, id);
@@ -51,5 +51,6 @@ public class ReservationDao {
         String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
+
 
 }

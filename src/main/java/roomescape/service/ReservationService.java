@@ -30,13 +30,12 @@ public class ReservationService {
         return result;
     }
 
-    public ReservationResponse create(ReservationRequest reservationDTO) {
-        validateEmptyData(reservationDTO);
+    public ReservationResponse create(ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
                 null,
-                reservationDTO.getName(),
-                reservationDTO.getDate(),
-                reservationDTO.getTime()
+                reservationRequest.getName(),
+                reservationRequest.getDate(),
+                reservationRequest.getTime()
         );
         Reservation createdReservation = reservationDao.create(reservation);
         return ReservationResponse.from(createdReservation);
@@ -49,15 +48,6 @@ public class ReservationService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void validateEmptyData(ReservationRequest reservation) {
-        if(reservation.getDate() == null || reservation.getDate().isEmpty())
-            throw new EmptyDataException("날짜 정보가 입력되지 않았습니다");
-        if(reservation.getTime() == null || reservation.getTime().isEmpty())
-            throw new EmptyDataException("시간 정보가 입력되지 않았습니다");
-        if(reservation.getName() == null || reservation.getName().isEmpty())
-            throw new EmptyDataException("이름이 입력되지 않았습니다");
     }
 
     private void validateReservationIdExists(Long id) {

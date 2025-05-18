@@ -39,9 +39,5 @@ public class Reservation {
         return time;
     }
 
-    public void setId(long generatedId) {
-        this.id = generatedId;
-    }
-
 }
 
