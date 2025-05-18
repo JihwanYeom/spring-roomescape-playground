@@ -42,7 +42,7 @@ public class ReservationDao {
     }
 
     public void deleteById(Long id) throws SQLException {
-        String sql = "delete from reservation where id=?";
+        String sql = "DELETE FROM reservation WHERE id=?";
         int update = jdbcTemplate.update(sql, id);
         System.out.println("update = " + update);
     }
