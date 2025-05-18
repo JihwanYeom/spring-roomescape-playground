@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.exception.EmptyDataException;
+import roomescape.exception.EmptyDateException;
+import roomescape.exception.EmptyNameException;
+import roomescape.exception.EmptyTimeException;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -41,11 +44,11 @@ public class ReservationController {
 
     private void validateEmptyData(ReservationRequest reservation) {
         if(reservation.getDate() == null || reservation.getDate().isEmpty())
-            throw new EmptyDataException("날짜 정보가 입력되지 않았습니다");
+            throw new EmptyDateException();
         if(reservation.getTime() == null || reservation.getTime().isEmpty())
-            throw new EmptyDataException("시간 정보가 입력되지 않았습니다");
+            throw new EmptyTimeException();
         if(reservation.getName() == null || reservation.getName().isEmpty())
-            throw new EmptyDataException("이름이 입력되지 않았습니다");
+            throw new EmptyNameException();
     }
 
     @DeleteMapping("/reservations/{id}")

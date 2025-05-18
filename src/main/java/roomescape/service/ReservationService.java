@@ -9,7 +9,6 @@ import roomescape.dto.ReservationResponse;
 
 import java.sql.SQLException;
 import java.util.List;
-import roomescape.exception.EmptyDataException;
 import roomescape.exception.NotFoundReservationException;
 
 @Service
@@ -52,7 +51,7 @@ public class ReservationService {
 
     private void validateReservationIdExists(Long id) {
         if (!reservationDao.idIsExist(id)) {
-            throw new NotFoundReservationException("ID " + id + "에 해당하는 예약이 존재하지 않습니다.");
+            throw new NotFoundReservationException(id);
         }
     }
 
