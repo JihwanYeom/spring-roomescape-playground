@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.exception.EmptyDataException;
 import roomescape.exception.EmptyDateException;
 import roomescape.exception.EmptyNameException;
 import roomescape.exception.EmptyTimeException;
