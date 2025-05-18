@@ -38,8 +38,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
         validateEmptyData(reservationRequest);
         ReservationResponse newReservation = reservationService.create(reservationRequest);
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
-                .body(newReservation);
+        return ResponseEntity.created(URI.create("/reservations")).body(newReservation);
     }
 
     private void validateEmptyData(ReservationRequest reservation) {
