@@ -4,9 +4,18 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import roomescape.dto.ReservationDTO;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
+import roomescape.exception.EmptyDateException;
+import roomescape.exception.EmptyNameException;
+import roomescape.exception.EmptyTimeException;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -19,16 +28,25 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationDTO>> readReservations() {
-        List<ReservationDTO> reservations = reservationService.readReservations();
+    public ResponseEntity<List<ReservationResponse>> readReservations() {
+        List<ReservationResponse> reservations = reservationService.findAll();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationDTO> addReservation(@RequestBody ReservationDTO reservationDTO) {
-        ReservationDTO newReservation = reservationService.addReservation(reservationDTO);
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
-                .body(newReservation);
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
+        validateEmptyData(reservationRequest);
+        ReservationResponse newReservation = reservationService.create(reservationRequest);
+        return ResponseEntity.created(URI.create("/reservations")).body(newReservation);
+    }
+
+    private void validateEmptyData(ReservationRequest reservation) {
+        if(reservation.getDate() == null || reservation.getDate().isEmpty())
+            throw new EmptyDateException();
+        if(reservation.getTime() == null || reservation.getTime().isEmpty())
+            throw new EmptyTimeException();
+        if(reservation.getName() == null || reservation.getName().isEmpty())
+            throw new EmptyNameException();
     }
 
     @DeleteMapping("/reservations/{id}")
@@ -36,4 +54,5 @@ public class ReservationController {
         reservationService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
 }

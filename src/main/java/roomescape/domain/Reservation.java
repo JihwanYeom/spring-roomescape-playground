@@ -1,7 +1,5 @@
 package roomescape.domain;
 
-import roomescape.util.ReservationValidator;
-
 public class Reservation {
 
     private Long id;
@@ -14,7 +12,15 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
-        ReservationValidator.validateEmptyData(this);
+    }
+
+    public static Reservation of(Long id, Reservation reservation) {
+        return new Reservation(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     public Long getId() {
@@ -33,20 +39,5 @@ public class Reservation {
         return time;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Reservation that = (Reservation) o;
-        return id != null && id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        if(id == null){
-            return 0;
-        }
-        return id.hashCode();
-    }
 }
 

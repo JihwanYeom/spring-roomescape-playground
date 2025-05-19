@@ -1,45 +1,58 @@
 package roomescape.service;
 
 import java.util.ArrayList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
-import roomescape.dto.ReservationDTO;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
+import java.sql.SQLException;
 import java.util.List;
+import roomescape.exception.NotFoundReservationException;
 
 @Service
 public class ReservationService {
 
-    private final Reservations reservations;
+    private final ReservationDao reservationDao;
 
-    @Autowired
-    public ReservationService(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationService(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
-    public List<ReservationDTO> readReservations() {
-        List<ReservationDTO> result = new ArrayList<>();
-        for (Reservation reservation : reservations.getReservations()) {
-            result.add(ReservationDTO.from(reservation));
+    public List<ReservationResponse> findAll() {
+        List<Reservation> reservations = reservationDao.findAll();
+        List<ReservationResponse> result = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            result.add(ReservationResponse.from(reservation));
         }
         return result;
     }
 
-    public ReservationDTO addReservation(ReservationDTO reservationDTO) {
+    public ReservationResponse create(ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
-                reservations.getNewId(),
-                reservationDTO.getName(),
-                reservationDTO.getDate(),
-                reservationDTO.getTime()
+                null,
+                reservationRequest.getName(),
+                reservationRequest.getDate(),
+                reservationRequest.getTime()
         );
-        reservations.addReservation(reservation);
-        return ReservationDTO.from(reservation);
+        Reservation createdReservation = reservationDao.create(reservation);
+        return ReservationResponse.from(createdReservation);
     }
 
     public void deleteById(Long id) {
-        reservations.deleteReservation(id);
+        validateReservationIdExists(id);
+        try {
+            reservationDao.deleteById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void validateReservationIdExists(Long id) {
+        if (!reservationDao.idIsExist(id)) {
+            throw new NotFoundReservationException(id);
+        }
     }
 
 }

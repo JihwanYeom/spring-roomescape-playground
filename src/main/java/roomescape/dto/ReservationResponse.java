@@ -2,14 +2,14 @@ package roomescape.dto;
 
 import roomescape.domain.Reservation;
 
-public class ReservationDTO {
+public class ReservationResponse {
 
     private Long id;
     private String name;
     private String date;
     private String time;
 
-    public ReservationDTO(Long id, String name, String date, String time) {
+    public ReservationResponse(Long id, String name, String date, String time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -32,8 +32,8 @@ public class ReservationDTO {
         return time;
     }
 
-    public static ReservationDTO from(Reservation reservation) {
-        return new ReservationDTO(
+    public static ReservationResponse from(Reservation reservation) {
+        return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
