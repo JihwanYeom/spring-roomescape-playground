@@ -1,12 +1,14 @@
 package roomescape.dto;
 
+import roomescape.domain.Time;
+
 public class ReservationRequest {
 
     private String name;
     private String date;
-    private String time;
+    private Time time;
 
-    public ReservationRequest(String name, String date, String time) {
+    public ReservationRequest(String name, String date, Time time) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -20,7 +22,7 @@ public class ReservationRequest {
         return date;
     }
 
-    public String getTime() {
+    public Time getTime() {
         return time;
     }
 

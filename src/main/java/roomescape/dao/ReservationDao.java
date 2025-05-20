@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 
 @Repository
 public class ReservationDao {
@@ -22,14 +23,19 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = "SELECT r.id as reservation_id, "
+                + "r.name, "
+                + "r.date, "
+                + "t.id as time_id, "
+                + "t.time as time_value "
+                + "FROM reservation as r inner join time as t on r.time_id = t.id";
 
         List<Reservation> reservations = jdbcTemplate.query(
                 sql, (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getString("date"),
-                        resultSet.getString("time")
+                        new Time(resultSet.getLong("time_id"), resultSet.getString("time_value"))
                 ));
         return reservations;
     }
