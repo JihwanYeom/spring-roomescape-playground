@@ -16,4 +16,9 @@ public class PageController {
         return "reservation";
     }
 
+    @GetMapping("/time")
+    public String times() {
+        return "time";
+    }
+
 }

@@ -35,6 +35,7 @@ public class TimeDao {
     public Time create(Time time) {
         BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(time);
         Number key = simpleJdbcInsert.executeAndReturnKey(paramSource);
+
         return Time.of(key.longValue(), time);
     }
 

@@ -1,7 +1,9 @@
 package roomescape.dto;
 
 public class TimeRequest {
-    private final String time;
+    private String time;
+
+    public TimeRequest() {}
 
     public TimeRequest(String time) {
         this.time = time;
@@ -10,4 +12,5 @@ public class TimeRequest {
     public String getTime() {
         return time;
     }
+
 }
