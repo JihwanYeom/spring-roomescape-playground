@@ -6,49 +6,46 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 
 @Repository
-public class ReservationDao {
-
+public class TimeDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public TimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation")
+                .withTableName("time")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+    public List<Time> findAll() {
+        String sql = "SELECT * FROM time";
 
-        List<Reservation> reservations = jdbcTemplate.query(
-                sql, (resultSet, rowNum) -> new Reservation(
+        List<Time> times = jdbcTemplate.query(
+                sql, (resultSet, rowNum) -> new Time(
                         resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("date"),
                         resultSet.getString("time")
-                ));
-        return reservations;
+                )
+        );
+        return times;
     }
 
-    public Reservation create(Reservation reservation) {
-        BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(reservation);
+    public Time create(Time time) {
+        BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(time);
         Number key = simpleJdbcInsert.executeAndReturnKey(paramSource);
-        return Reservation.of(key.longValue(), reservation);
+        return Time.of(key.longValue(), time);
     }
 
     public void deleteById(Long id) throws SQLException {
-        String sql = "DELETE FROM reservation WHERE id=?";
+        String sql = "DELETE FROM time WHERE id=?";
         jdbcTemplate.update(sql, id);
     }
 
     public boolean idIsExist(Long id) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = ?)";
+        String sql = "SELECT EXISTS (SELECT 1 FROM time WHERE id = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
-
 
 }

@@ -19,10 +19,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Void> handleIllegalStateException(NotFoundReservationException e) {
+    @ExceptionHandler(NotFoundTimeException.class)
+    public ResponseEntity<Void> handleNotFoundTimeException(NotFoundTimeException e) {
         System.out.println(e.getMessage());
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 
 }
