@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,16 @@ import roomescape.domain.Reservation;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void initTimeTable() {
+        jdbcTemplate.update("INSERT INTO time (time) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO time (time) VALUES (?)", "11:00");
+        jdbcTemplate.update("INSERT INTO time (time) VALUES (?)", "12:00");
+    }
+
     @Test
     void 일단계() {
         RestAssured.given().log().all()
@@ -31,9 +42,9 @@ public class MissionStepTest {
 
     @Test
     void 이단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "10:00");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "블랙", "2023-08-06", "11:00");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "실버", "2023-08-07", "12:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "블랙", "2023-08-06", 2);
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "실버", "2023-08-07", 3);
 
         RestAssured.given().log().all()
                 .when().get("/reservation")
@@ -52,7 +63,7 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("time", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -101,10 +112,6 @@ public class MissionStepTest {
                 .statusCode(404);
     }
 
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @Test
     void 오단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -117,7 +124,7 @@ public class MissionStepTest {
     }
     @Test
     void 육단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -135,7 +142,7 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("time", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -174,7 +181,7 @@ public class MissionStepTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(4));
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
