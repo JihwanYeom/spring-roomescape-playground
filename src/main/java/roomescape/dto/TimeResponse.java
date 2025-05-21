@@ -1,6 +1,5 @@
 package roomescape.dto;
 
-import roomescape.domain.Reservation;
 import roomescape.domain.Time;
 
 public class TimeResponse {
@@ -27,6 +26,5 @@ public class TimeResponse {
     public String getTime() {
         return time;
     }
-
 
 }
