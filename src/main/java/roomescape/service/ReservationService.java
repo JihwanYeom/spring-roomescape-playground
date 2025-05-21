@@ -11,7 +11,6 @@ import roomescape.dto.ReservationResponse;
 
 import java.sql.SQLException;
 import java.util.List;
-import roomescape.exception.InvalidTimeIdException;
 import roomescape.exception.NotFoundReservationException;
 import roomescape.exception.NotFoundTimeException;
 
@@ -36,12 +35,7 @@ public class ReservationService {
     }
 
     public ReservationResponse create(ReservationRequest reservationRequest) {
-        Long timeId;
-        try {
-            timeId = Long.parseLong(reservationRequest.getTime());
-        } catch (NumberFormatException e) {
-            throw new InvalidTimeIdException();
-        }
+        Long timeId = Long.parseLong(reservationRequest.getTime());
         Time time = timeDao.findById(timeId);
         if (time == null) {
             throw new NotFoundTimeException(timeId);
