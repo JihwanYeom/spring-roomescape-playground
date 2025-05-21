@@ -25,4 +25,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
+    @ExceptionHandler(InvalidTimeIdException.class)
+    public ResponseEntity<Void> handleInvalidTimeIdException(InvalidTimeIdException e) {
+        System.out.println(e.getMessage());
+        return ResponseEntity.badRequest().build();
+    }
+
 }

@@ -33,6 +33,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
         validateEmptyData(reservationRequest);
@@ -43,7 +44,7 @@ public class ReservationController {
     private void validateEmptyData(ReservationRequest reservation) {
         if(reservation.getDate() == null || reservation.getDate().isEmpty())
             throw new EmptyDateException();
-        if(reservation.getTime() == null)
+        if(reservation.getTime() == null || reservation.getTime().isEmpty())
             throw new EmptyTimeException();
         if(reservation.getName() == null || reservation.getName().isEmpty())
             throw new EmptyNameException();

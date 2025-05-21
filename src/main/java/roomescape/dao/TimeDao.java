@@ -32,6 +32,15 @@ public class TimeDao {
         return times;
     }
 
+    public Time findById(Long timeId) {
+        String sql = "SELECT * FROM time WHERE id = ?";
+        Time time = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Time(
+                resultSet.getLong("id"),
+                resultSet.getString("time")
+        ), timeId);
+        return time;
+    }
+
     public Time create(Time time) {
         BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(time);
         Number key = simpleJdbcInsert.executeAndReturnKey(paramSource);
