@@ -33,7 +33,6 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
         validateEmptyData(reservationRequest);
