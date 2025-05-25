@@ -31,12 +31,7 @@ public class ReservationDao {
                 + "FROM reservation as r inner join time as t on r.time_id = t.id";
 
         List<Reservation> reservations = jdbcTemplate.query(
-                sql, (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("reservation_id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        new Time(resultSet.getLong("time_id"), resultSet.getString("time_value"))
-                ));
+                sql, RowMappers.RESERVATION_MAPPER);
         return reservations;
     }
 

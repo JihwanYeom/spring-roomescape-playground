@@ -24,20 +24,14 @@ public class TimeDao {
         String sql = "SELECT * FROM time";
 
         List<Time> times = jdbcTemplate.query(
-                sql, (resultSet, rowNum) -> new Time(
-                        resultSet.getLong("id"),
-                        resultSet.getString("time")
-                )
+                sql, RowMappers.TIME_MAPPER
         );
         return times;
     }
 
     public Time findById(Long timeId) {
         String sql = "SELECT * FROM time WHERE id = ?";
-        Time time = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Time(
-                resultSet.getLong("id"),
-                resultSet.getString("time")
-        ), timeId);
+        Time time = jdbcTemplate.queryForObject(sql, RowMappers.TIME_MAPPER, timeId);
         return time;
     }
 
