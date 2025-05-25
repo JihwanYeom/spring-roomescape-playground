@@ -223,4 +223,19 @@ public class MissionStepTest {
         assertThat(isJdbcTemplateInjected).isFalse();
     }
 
+    @Test
+    void 생성자검증테스트() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "three O' clock");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
 }
