@@ -43,7 +43,7 @@ public class TimeDao {
         return Time.withId(key.longValue(), time);
     }
 
-    public void deleteById(Long id) throws SQLException {
+    public void deleteById(Long id) {
         String sql = "DELETE FROM time WHERE id=?";
         jdbcTemplate.update(sql, id);
     }

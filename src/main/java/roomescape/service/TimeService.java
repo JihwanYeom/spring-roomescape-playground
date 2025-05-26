@@ -56,8 +56,6 @@ public class TimeService {
             timeDao.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new TimeInUseException();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
