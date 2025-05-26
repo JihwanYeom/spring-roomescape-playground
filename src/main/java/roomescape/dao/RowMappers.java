@@ -5,11 +5,9 @@ import roomescape.domain.Reservation;
 import roomescape.domain.Time;
 import roomescape.exception.InvalidTimeFormatException;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class RowMappers {
-
 
     public static final RowMapper<Time> TIME_MAPPER = (resultSet, rowNum) -> {
         try {
@@ -35,4 +33,5 @@ public class RowMappers {
             throw new InvalidTimeFormatException();
         }
     };
+
 }

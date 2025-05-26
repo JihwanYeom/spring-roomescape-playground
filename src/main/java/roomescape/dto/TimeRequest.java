@@ -1,6 +1,7 @@
 package roomescape.dto;
 
 public class TimeRequest {
+
     private String time;
 
     public TimeRequest() {}

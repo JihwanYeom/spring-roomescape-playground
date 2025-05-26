@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.List;
 import roomescape.exception.DuplicateReservationException;
 import roomescape.exception.NotFoundReservationException;
-import roomescape.exception.NotFoundTimeException;
 
 @Service
 public class ReservationService {

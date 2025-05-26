@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import roomescape.domain.Time;
 
 public class TimeResponse {
+
     private final LocalTime time;
     private final Long id;
 
