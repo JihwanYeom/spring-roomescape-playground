@@ -1,6 +1,8 @@
 package roomescape.service;
 
 import java.sql.SQLException;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import roomescape.dao.TimeDao;
 import roomescape.domain.Time;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
+import roomescape.exception.InvalidTimeFormatException;
 import roomescape.exception.NotFoundTimeException;
 
 @Service
@@ -29,10 +32,15 @@ public class TimeService {
     }
 
     public TimeResponse create(TimeRequest timeRequest) {
-        Time time = new Time(
-                null,
-                timeRequest.getTime()
-        );
+        Time time;
+        try {
+            time = new Time(
+                    null,
+                    LocalTime.parse(timeRequest.getTime())
+            );
+        } catch (DateTimeParseException e) {
+            throw new InvalidTimeFormatException("시간 형식이 올바르지 않습니다");
+        }
         Time createdTime = timeDao.create(time);
         return TimeResponse.from(createdTime);
     }
