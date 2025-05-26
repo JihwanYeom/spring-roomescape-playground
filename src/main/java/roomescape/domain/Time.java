@@ -11,7 +11,7 @@ public class Time {
         this.time = time;
     }
 
-    public static Time of(Long id, Time time) {
+    public static Time withId(Long id, Time time) {
         return new Time(id, time.getTime());
     }
 

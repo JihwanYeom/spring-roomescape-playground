@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -39,7 +40,7 @@ public class TimeDao {
         BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(time);
         Number key = simpleJdbcInsert.executeAndReturnKey(paramSource);
 
-        return Time.of(key.longValue(), time);
+        return Time.withId(key.longValue(), time);
     }
 
     public void deleteById(Long id) throws SQLException {
@@ -50,6 +51,12 @@ public class TimeDao {
     public boolean idIsExist(Long id) {
         String sql = "SELECT EXISTS (SELECT 1 FROM time WHERE id = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
+
+    public boolean timeIsExists(LocalTime time) {
+        String sql = "SELECT COUNT(*) FROM time WHERE time = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, time);
+        return count != null && count > 0;
     }
 
 }

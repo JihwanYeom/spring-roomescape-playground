@@ -11,6 +11,7 @@ import roomescape.dto.ReservationResponse;
 
 import java.sql.SQLException;
 import java.util.List;
+import roomescape.exception.DuplicateReservationException;
 import roomescape.exception.NotFoundReservationException;
 import roomescape.exception.NotFoundTimeException;
 
@@ -37,9 +38,11 @@ public class ReservationService {
     public ReservationResponse create(ReservationRequest reservationRequest) {
         Long timeId = Long.parseLong(reservationRequest.getTime());
         Time time = timeDao.findById(timeId);
-        if (time == null) {
-            throw new NotFoundTimeException(timeId);
+
+        if (reservationDao.reservationIsExist(reservationRequest.getDate(), timeId)) {
+            throw new DuplicateReservationException();
         }
+
         Reservation reservation = new Reservation(
                 null,
                 reservationRequest.getName(),

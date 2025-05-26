@@ -10,6 +10,7 @@ import roomescape.dao.TimeDao;
 import roomescape.domain.Time;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
+import roomescape.exception.DuplicateTimeException;
 import roomescape.exception.InvalidTimeFormatException;
 import roomescape.exception.NotFoundTimeException;
 
@@ -34,13 +35,15 @@ public class TimeService {
     public TimeResponse create(TimeRequest timeRequest) {
         Time time;
         try {
-            time = new Time(
-                    null,
-                    LocalTime.parse(timeRequest.getTime())
-            );
+            time = new Time(null, LocalTime.parse(timeRequest.getTime()));
         } catch (DateTimeParseException e) {
-            throw new InvalidTimeFormatException("시간 형식이 올바르지 않습니다");
+            throw new InvalidTimeFormatException();
         }
+
+        if (timeDao.timeIsExists(time.getTime())) {
+            throw new DuplicateTimeException();
+        }
+
         Time createdTime = timeDao.create(time);
         return TimeResponse.from(createdTime);
     }
