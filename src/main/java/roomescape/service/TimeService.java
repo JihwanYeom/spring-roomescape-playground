@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.TimeDao;
 import roomescape.domain.Time;
@@ -13,6 +14,7 @@ import roomescape.dto.TimeResponse;
 import roomescape.exception.DuplicateTimeException;
 import roomescape.exception.InvalidTimeFormatException;
 import roomescape.exception.NotFoundTimeException;
+import roomescape.exception.TimeInUseException;
 
 @Service
 public class TimeService {
@@ -52,6 +54,8 @@ public class TimeService {
         validateTimeIdExists(id);
         try {
             timeDao.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new TimeInUseException();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
