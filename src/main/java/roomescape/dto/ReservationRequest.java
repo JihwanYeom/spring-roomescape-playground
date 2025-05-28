@@ -1,26 +1,19 @@
 package roomescape.dto;
 
-import roomescape.exception.InvalidTimeIdException;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ReservationRequest {
 
-    private String name;
-    private String date;
-    private String time;
+    private final String name;
+    private final String date;
+    @JsonProperty("time")
+    private final Long timeId;;
 
-    public ReservationRequest(String name, String date, String time) {
-        validateTimeIdFormat(time);
+    public ReservationRequest(String name, String date, Long timeId) {
+
         this.name = name;
         this.date = date;
-        this.time = time;
-    }
-
-    private void validateTimeIdFormat(String time) throws InvalidTimeIdException {
-        try {
-            Long.parseLong(time);
-        } catch (NumberFormatException e) {
-            throw new InvalidTimeIdException();
-        }
+        this.timeId = timeId;
     }
 
     public String getName() {
@@ -31,8 +24,8 @@ public class ReservationRequest {
         return date;
     }
 
-    public String getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 
 }
