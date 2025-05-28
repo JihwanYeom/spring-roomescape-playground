@@ -1,6 +1,5 @@
 package roomescape.dao;
 
-import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
