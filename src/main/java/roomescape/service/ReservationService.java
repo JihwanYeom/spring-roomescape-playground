@@ -3,7 +3,6 @@ package roomescape.service;
 import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
-import roomescape.dao.TimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.Time;
 import roomescape.dto.ReservationRequest;
@@ -18,11 +17,11 @@ import roomescape.exception.NotFoundReservationException;
 public class ReservationService {
 
     private final ReservationDao reservationDao;
-    private final TimeDao timeDao;
+    private final TimeService timeService;
 
-    public ReservationService(ReservationDao reservationDao, TimeDao timeDao) {
+    public ReservationService(ReservationDao reservationDao, TimeService timeService) {
         this.reservationDao = reservationDao;
-        this.timeDao = timeDao;
+        this.timeService = timeService;
     }
 
     public List<ReservationResponse> findAll() {
@@ -35,8 +34,8 @@ public class ReservationService {
     }
 
     public ReservationResponse create(ReservationRequest reservationRequest) {
-        Long timeId = Long.parseLong(reservationRequest.getTime());
-        Time time = timeDao.findById(timeId);
+        Long timeId = reservationRequest.getTimeId();
+        Time time = timeService.findById(timeId);
 
         if (reservationDao.reservationIsExist(reservationRequest.getDate(), timeId)) {
             throw new DuplicateReservationException();
@@ -48,6 +47,7 @@ public class ReservationService {
                 reservationRequest.getDate(),
                 time
         );
+
         Reservation createdReservation = reservationDao.create(reservation);
         return ReservationResponse.from(createdReservation);
     }

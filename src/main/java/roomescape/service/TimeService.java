@@ -1,6 +1,5 @@
 package roomescape.service;
 
-import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
 import roomescape.exception.DuplicateTimeException;
 import roomescape.exception.InvalidTimeFormatException;
-import roomescape.exception.NotFoundTimeException;
+import roomescape.exception.NotFoundTimeIdException;
 import roomescape.exception.TimeInUseException;
 
 @Service
@@ -32,6 +31,14 @@ public class TimeService {
             result.add(TimeResponse.from(time));
         }
         return result;
+    }
+
+    public Time findById(Long id) {
+        Time time = timeDao.findById(id);
+        if (time == null) {
+            throw new NotFoundTimeIdException(id);
+        }
+        return time;
     }
 
     public TimeResponse create(TimeRequest timeRequest) {
@@ -61,7 +68,7 @@ public class TimeService {
 
     private void validateTimeIdExists(Long id) {
         if (!timeDao.idIsExist(id)) {
-            throw new NotFoundTimeException(id);
+            throw new NotFoundTimeIdException(id);
         }
     }
 
