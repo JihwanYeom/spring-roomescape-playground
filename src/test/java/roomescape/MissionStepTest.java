@@ -20,6 +20,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import roomescape.controller.ReservationController;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -66,7 +67,7 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "1");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -100,7 +101,7 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "");
-        params.put("time", "");
+        params.put("timeId", "");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -129,11 +130,11 @@ public class MissionStepTest {
     void 육단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -145,7 +146,7 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "1");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -170,7 +171,7 @@ public class MissionStepTest {
     @Test
     void 팔단계() {
         Map<String, String> params = new HashMap<>();
-        params.put("time", "10:00");
+        params.put("time", "20:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -196,7 +197,7 @@ public class MissionStepTest {
         Map<String, String> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
-        reservation.put("time", "10:00");
+        reservation.put("timeId", "10:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -228,7 +229,7 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "three O' clock");
+        params.put("timeId", "three O' clock");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
