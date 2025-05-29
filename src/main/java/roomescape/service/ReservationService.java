@@ -4,20 +4,24 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 import java.sql.SQLException;
 import java.util.List;
+import roomescape.exception.DuplicateReservationException;
 import roomescape.exception.NotFoundReservationException;
 
 @Service
 public class ReservationService {
 
     private final ReservationDao reservationDao;
+    private final TimeService timeService;
 
-    public ReservationService(ReservationDao reservationDao) {
+    public ReservationService(ReservationDao reservationDao, TimeService timeService) {
         this.reservationDao = reservationDao;
+        this.timeService = timeService;
     }
 
     public List<ReservationResponse> findAll() {
@@ -30,12 +34,20 @@ public class ReservationService {
     }
 
     public ReservationResponse create(ReservationRequest reservationRequest) {
+        Long timeId = reservationRequest.getTimeId();
+        Time time = timeService.findById(timeId);
+
+        if (reservationDao.reservationIsExist(reservationRequest.getDate(), timeId)) {
+            throw new DuplicateReservationException();
+        }
+
         Reservation reservation = new Reservation(
                 null,
                 reservationRequest.getName(),
                 reservationRequest.getDate(),
-                reservationRequest.getTime()
+                time
         );
+
         Reservation createdReservation = reservationDao.create(reservation);
         return ReservationResponse.from(createdReservation);
     }

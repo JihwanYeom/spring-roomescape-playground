@@ -22,15 +22,15 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = "SELECT r.id as reservation_id, "
+                + "r.name, "
+                + "r.date, "
+                + "t.id as time_id, "
+                + "t.time as time_value "
+                + "FROM reservation as r inner join time as t on r.time_id = t.id";
 
         List<Reservation> reservations = jdbcTemplate.query(
-                sql, (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        resultSet.getString("time")
-                ));
+                sql, RowMappers.RESERVATION_MAPPER);
         return reservations;
     }
 
@@ -42,8 +42,7 @@ public class ReservationDao {
 
     public void deleteById(Long id) throws SQLException {
         String sql = "DELETE FROM reservation WHERE id=?";
-        int update = jdbcTemplate.update(sql, id);
-        System.out.println("update = " + update);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean idIsExist(Long id) {
@@ -51,5 +50,10 @@ public class ReservationDao {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 
+    public boolean reservationIsExist(String date, Long timeId) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, timeId);
+        return count != null && count > 0;
+    }
 
 }

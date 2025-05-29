@@ -1,15 +1,16 @@
 package roomescape.dto;
 
+import java.time.LocalTime;
 import roomescape.domain.Reservation;
 
 public class ReservationResponse {
 
-    private Long id;
-    private String name;
-    private String date;
-    private String time;
+    private final Long id;
+    private final String name;
+    private final String date;
+    private final LocalTime time;
 
-    public ReservationResponse(Long id, String name, String date, String time) {
+    public ReservationResponse(Long id, String name, String date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -28,7 +29,7 @@ public class ReservationResponse {
         return date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
@@ -37,7 +38,7 @@ public class ReservationResponse {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
+                reservation.getTime().getTime()
         );
     }
 
